@@ -1,20 +1,21 @@
 """
-Text classification with the torchtext library
+torchtext 라이브러리로 텍스트 분류하기
 ==================================
 
-In this tutorial, we will show how to use the torchtext library to build the dataset for the text classification analysis. Users will have the flexibility to
+이 튜토리얼에서는 torchtext 라이브러리를 사용하여 텍스트 분류 분석을 위한 데이터셋을 구축하는 방법을 보여줍니다. 
+사용자는 다음과 같이 유동적으로 기능을 사용할 수 있습니다.
 
-   - Access to the raw data as an iterator
-   - Build data processing pipeline to convert the raw text strings into ``torch.Tensor`` that can be used to train the model
-   - Shuffle and iterate the data with `torch.utils.data.DataLoader <https://pytorch.org/docs/stable/data.html?highlight=dataloader#torch.utils.data.DataLoader>`__
+   - 반복자로 원시 데이터에 액세스합니다.
+   - 원시 텍스트 문자열을 모델 학습에 사용할 수 있는 ``torch.Tensor``로 변환하는 데이터 처리 파이프라인 구축합니다.
+   - torch.utils.data.DataLodaer로 데이터를 섞거나 반복합니다. `torch.utils.data.DataLoader <https://pytorch.org/docs/stable/data.html?highlight=dataloader#torch.utils.data.DataLoader>`__
 """
 
 
 ######################################################################
-# Access to the raw dataset iterators
+# 원시 데이터셋 반복자들을 액세스하기
 # -----------------------------------
 #
-# The torchtext library provides a few raw dataset iterators, which yield the raw text strings. For example, the ``AG_NEWS`` dataset iterators yield the raw data as a tuple of label and text.
+# torchtext 라이브러리는 원시 텍스트 문자열을 생성하는 몇 가지 원시 데이터셋 반복자를 제공합니다. 예를 들어 ``AG_NEWS`` 데이터셋 반복자는 원시 데이터를 레이블과 텍스트의 튜플로 생성합니다.
 
 import torch
 from torchtext.datasets import AG_NEWS
@@ -25,33 +26,30 @@ train_iter = AG_NEWS(split='train')
 # ::
 #
 #     next(train_iter)
-#     >>> (3, "Wall St. Bears Claw Back Into the Black (Reuters) Reuters - 
-#     Short-sellers, Wall Street's dwindling\\band of ultra-cynics, are seeing green 
-#     again.")
+#     >>> (3, "월 스트리트. 곰은 다시 검은색으로 발톱을 깎습니다 (Reuters) Reuters - 
+#     월스트리트의 점점 줄어들고 있는 극도로 냉소적인 집단인 공매도자들이 다시 활동할 것으로 보입니다.")
 # 
 #     next(train_iter)
-#     >>> (3, 'Carlyle Looks Toward Commercial Aerospace (Reuters) Reuters - Private 
-#     investment firm Carlyle Group,\\which has a reputation for making well-timed 
-#     and occasionally\\controversial plays in the defense industry, has quietly 
-#     placed\\its bets on another part of the market.')
+#     >>> (3, 'Carlyle은 상업용 항공우주를 바라보고 있다(Reuters) Reuters) - 
+#     방위 산업에서 시기 적절하고 때때로 논란이 되는 연극을 제작하는 것으로 
+#     평판이 좋은 민간 투자 회사인 칼라일 그룹은 조용히 시장의 다른 부분에 베팅했습니다.')
 # 
 #     next(train_iter)
-#     >>> (3, "Oil and Economy Cloud Stocks' Outlook (Reuters) Reuters - Soaring 
-#     crude prices plus worries\\about the economy and the outlook for earnings are 
-#     expected to\\hang over the stock market next week during the depth of 
-#     the\\summer doldrums.")
+#     >>> (3, "석유 및 경제 클라우드 주식 전망 (Reuters) Reuters - 
+#     유가 급등과 경제에 대한 우려, 실적 전망이 여름 침체기인 다음 주 주식 시장을 뒤흔들 것으로 예상됩니다.")
 #
 
 
 ######################################################################
-# Prepare data processing pipelines
+# 데이터 처리 파이프 라인 준비하기
 # ---------------------------------
 #
-# We have revisited the very basic components of the torchtext library, including vocab, word vectors, tokenizer. Those are the basic data processing building blocks for raw text string.
+# 우리는 어휘, 단어 벡터, 토크나이저를 포함하여 torchtext 라이브러리의 가장 기본적인 구성 요소를 다시 방문했습니다. 이러한 요소는 원시 텍스트 문자열에 대한 기본 데이터 처리 빌딩 블록입니다.
 #
-# Here is an example for typical NLP data processing with tokenizer and vocabulary. The first step is to build a vocabulary with the raw training dataset. Here we use built in
-# factory function `build_vocab_from_iterator` which accepts iterator that yield list or iterator of tokens. Users can also pass any special symbols to be added to the
-# vocabulary.
+# 다음은 토크나이저 및 어휘를 사용한 일반적인 NLP 데이터 처리의 예입니다. 
+# 첫 번째 단계는 원시 훈련 데이터셋을 가지고 어휘를 구축하는 것입니다. 
+# 여기서 우리는 yield list 또는 토큰의 iterator를 생성하는 반복자를 허용하는 내장된 팩토리 함수 `build_vocab_from_iterator`를 사용합니다. 
+# 사용자는 어휘에 추가할 특수 기호를 전달할 수도 있습니다.
 
 
 from torchtext.data.utils import get_tokenizer
