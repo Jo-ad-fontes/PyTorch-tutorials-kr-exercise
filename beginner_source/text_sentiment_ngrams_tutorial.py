@@ -6,8 +6,8 @@ torchtext 라이브러리로 텍스트 분류하기
 사용자는 다음과 같이 유동적으로 기능을 사용할 수 있습니다.
 
    - 반복자로 원시 데이터에 액세스합니다.
-   - 원시 텍스트 문자열을 모델 학습에 사용할 수 있는 ``torch.Tensor``로 변환하는 데이터 처리 파이프라인 구축합니다.
-   - torch.utils.data.DataLodaer로 데이터를 섞거나 반복합니다. `torch.utils.data.DataLoader <https://pytorch.org/docs/stable/data.html?highlight=dataloader#torch.utils.data.DataLoader>`__
+   - 원시 텍스트 문자열을 모델 학습에 사용할 수 있는 ``torch.Tensor``로 변환하는 데이터 처리 파이프라인을 구축합니다.
+   - torch.utils.data.DataLodaer로 데이터를 섞거나(shuffle) 반복합니다. `torch.utils.data.DataLoader <https://pytorch.org/docs/stable/data.html?highlight=dataloader#torch.utils.data.DataLoader>`__
 """
 
 
@@ -15,7 +15,8 @@ torchtext 라이브러리로 텍스트 분류하기
 # 원시 데이터셋 반복자들을 액세스하기
 # -----------------------------------
 #
-# torchtext 라이브러리는 원시 텍스트 문자열을 생성하는 몇 가지 원시 데이터셋 반복자를 제공합니다. 예를 들어 ``AG_NEWS`` 데이터셋 반복자는 원시 데이터를 레이블과 텍스트의 튜플로 생성합니다.
+# torchtext 라이브러리는 원시 텍스트 문자열을 생성하는 몇 가지 원시 데이터셋 반복자를 제공합니다. 
+# 예를 들어 ``AG_NEWS`` 데이터셋 반복자는 원시 데이터를 레이블과 텍스트의 튜플로 생성합니다.
 
 import torch
 from torchtext.datasets import AG_NEWS
@@ -26,25 +27,27 @@ train_iter = AG_NEWS(split='train')
 # ::
 #
 #     next(train_iter)
-#     >>> (3, "월 스트리트. 곰은 다시 검은색으로 발톱을 깎습니다 (Reuters) Reuters - 
-#     월스트리트의 점점 줄어들고 있는 극도로 냉소적인 집단인 공매도자들이 다시 활동할 것으로 보입니다.")
+#     >>> (3, "Wall St. Bears Claw Back Into the Black (Reuters) Reuters - 
+#     Short-sellers, Wall Street's dwindling\\band of ultra-cynics, are seeing green 
+#     again.")
 # 
 #     next(train_iter)
-#     >>> (3, 'Carlyle은 상업용 항공우주를 바라보고 있다(Reuters) Reuters) - 
-#     방위 산업에서 시기 적절하고 때때로 논란이 되는 연극을 제작하는 것으로 
-#     평판이 좋은 민간 투자 회사인 칼라일 그룹은 조용히 시장의 다른 부분에 베팅했습니다.')
+#     >>> (3, 'Carlyle Looks Toward Commercial Aerospace (Reuters) Reuters - Private 
+#     investment firm Carlyle Group,\\which has a reputation for making well-timed 
+#     and occasionally\\controversial plays in the defense industry, has quietly 
+#     placed\\its bets on another part of the market.')
 # 
 #     next(train_iter)
-#     >>> (3, "석유 및 경제 클라우드 주식 전망 (Reuters) Reuters - 
-#     유가 급등과 경제에 대한 우려, 실적 전망이 여름 침체기인 다음 주 주식 시장을 뒤흔들 것으로 예상됩니다.")
-#
+#     >>> (3, "Oil and Economy Cloud Stocks' Outlook (Reuters) Reuters - Soaring 
+#     crude prices plus worries\\about the economy and the outlook for earnings are 
 
 
 ######################################################################
 # 데이터 처리 파이프 라인 준비하기
 # ---------------------------------
 #
-# 우리는 어휘, 단어 벡터, 토크나이저를 포함하여 torchtext 라이브러리의 가장 기본적인 구성 요소를 다시 방문했습니다. 이러한 요소는 원시 텍스트 문자열에 대한 기본 데이터 처리 빌딩 블록입니다.
+# 어휘, 단어 벡터, 토크나이저를 포함하여 torchtext 라이브러리의 가장 기본적인 구성 요소를 다시 확인해 봅시다. 
+# 이러한 요소는 원시 텍스트 문자열에 대한 기본 데이터 처리 빌딩 블록입니다.
 #
 # 다음은 토크나이저 및 어휘를 사용한 일반적인 NLP 데이터 처리의 예입니다. 
 # 첫 번째 단계는 원시 훈련 데이터셋을 가지고 어휘를 구축하는 것입니다. 
